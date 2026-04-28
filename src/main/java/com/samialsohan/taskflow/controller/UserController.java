@@ -2,6 +2,7 @@ package com.samialsohan.taskflow.controller;
 
 import com.samialsohan.taskflow.dto.UserDto;
 import com.samialsohan.taskflow.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto.Response>createUser(@RequestBody UserDto.CreateRequest dto){
+    public ResponseEntity<UserDto.Response>createUser(@Valid @RequestBody UserDto.CreateRequest dto){
         UserDto.Response response = userService.createUser(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
