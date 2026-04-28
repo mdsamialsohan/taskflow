@@ -26,6 +26,17 @@ public class UserService {
         User saved = userRepository.save(user);
         return toResponse(saved);
     }
+    public UserDto.Response getUserById(Long id){
+        User user = userRepository.findById(id)
+                .orElseThrow(()->new RuntimeException("User not found with id: "+ id));
+        return  toResponse(user);
+    }
+    public void deleteUser (Long id){
+        if(!userRepository.existsById(id)){
+            throw new RuntimeException("user not found with id: "+id);
+        }
+        userRepository.deleteById(id);
+    }
 
     private UserDto.Response toResponse(User user) {
         return new UserDto.Response(
