@@ -2,6 +2,7 @@ package com.samialsohan.taskflow.service;
 
 import com.samialsohan.taskflow.dto.UserDto;
 import com.samialsohan.taskflow.entity.User;
+import com.samialsohan.taskflow.exception.ResourceNotFoundException;
 import com.samialsohan.taskflow.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -28,12 +29,12 @@ public class UserService {
     }
     public UserDto.Response getUserById(Long id){
         User user = userRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("User not found with id: "+ id));
+                .orElseThrow(()->new ResourceNotFoundException("User ", id));
         return  toResponse(user);
     }
     public void deleteUser (Long id){
         if(!userRepository.existsById(id)){
-            throw new RuntimeException("user not found with id: "+id);
+            throw new ResourceNotFoundException("User",id);
         }
         userRepository.deleteById(id);
     }
