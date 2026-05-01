@@ -38,6 +38,14 @@ public class UserService {
         }
         userRepository.deleteById(id);
     }
+
+    public UserDto.Response updateUser(Long id, UserDto.UpdateRequest dto){
+        User user = findUserOrThrow(id);
+        user.setName(dto.name());
+        user.setEmail(dto.email());
+        User saved = userRepository.save(user);
+        return toResponse(saved);
+    }
     public User findUserOrThrow(Long id)
     {
         return userRepository.findById(id)
@@ -51,5 +59,6 @@ public class UserService {
                 user.getCreatedAt()
         );
     }
+
 
 }

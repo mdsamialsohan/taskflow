@@ -3,7 +3,6 @@ package com.samialsohan.taskflow.controller;
 import com.samialsohan.taskflow.dto.ProjectDto;
 import com.samialsohan.taskflow.service.ProjectService;
 import jakarta.validation.Valid;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +38,11 @@ public class ProjectController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProject(@PathVariable Long id){
         projectService.deleteProject(id);
+    }
+    @PutMapping("/{id}")
+    public ProjectDto.Response updateProject( @PathVariable Long id, @Valid @RequestBody ProjectDto.UpdateRequest dto)
+    {
+        return projectService.updateProject(dto, id);
     }
 
 }

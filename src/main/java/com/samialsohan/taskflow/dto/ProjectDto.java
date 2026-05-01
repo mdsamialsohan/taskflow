@@ -12,7 +12,7 @@ public final class ProjectDto {
             @Size(max = 200, message = "Project name must be 200 character or less")
             String name,
 
-            @Size(max=100, message = "Description must be 1000 character or less")
+            @Size(max=1000, message = "Description must be 1000 character or less")
             String description
     ){}
     public record Response(
@@ -21,5 +21,13 @@ public final class ProjectDto {
             String description,
             Instant createdAt,
             Instant updatedAt
+    ){}
+    public record UpdateRequest(
+            @NotBlank(message = "Project name is required")
+            @Size(max = 200, message = "Project name must be 200 character or less")
+            String name,
+
+            @Size(max = 1000, message = "Description must be 1000 character or less")
+            String description
     ){}
 }

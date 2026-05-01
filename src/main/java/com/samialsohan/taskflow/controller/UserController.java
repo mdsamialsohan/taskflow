@@ -32,9 +32,16 @@ public class UserController {
     public UserDto.Response getUserById(@PathVariable Long id){
         return userService.getUserById(id);
     }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long id){
         userService.deleteUser(id);
+    }
+
+    @PutMapping("/{id}") // replace the resource with new data, UPDATE
+    public UserDto.Response updateUser(@PathVariable Long id,
+                                       @Valid @RequestBody UserDto.UpdateRequest dto){
+        return userService.updateUser(id,dto);
     }
 }

@@ -38,11 +38,21 @@ public class ProjectService {
         }
         projectRepository.deleteById(id);
     }
+    public ProjectDto.Response updateProject(ProjectDto.UpdateRequest dto, Long id)
+    {
+        Project project = findProjectOrThrow(id);
+        project.setName(dto.name());
+        project.setDescription(dto.description());
+        Project saved = projectRepository.save(project);
+        return toResponse(saved);
+    }
+
     public Project findProjectOrThrow(Long id)
     {
         return projectRepository.findById(id)
                 .orElseThrow(()->new ResourceNotFoundException("Project",id));
     }
+
     private ProjectDto.Response toResponse(Project project){ // this method convert entity into dto
         return new ProjectDto.Response(
                 project.getId(),
