@@ -1,6 +1,7 @@
 package com.samialsohan.taskflow.service;
 
 import com.samialsohan.taskflow.dto.UserDto;
+import com.samialsohan.taskflow.entity.Project;
 import com.samialsohan.taskflow.entity.User;
 import com.samialsohan.taskflow.exception.ResourceNotFoundException;
 import com.samialsohan.taskflow.repository.UserRepository;
@@ -28,8 +29,7 @@ public class UserService {
         return toResponse(saved);
     }
     public UserDto.Response getUserById(Long id){
-        User user = userRepository.findById(id)
-                .orElseThrow(()->new ResourceNotFoundException("User ", id));
+        User user = findUserOrThrow(id);
         return  toResponse(user);
     }
     public void deleteUser (Long id){
@@ -38,7 +38,11 @@ public class UserService {
         }
         userRepository.deleteById(id);
     }
-
+    public User findUserOrThrow(Long id)
+    {
+        return userRepository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("User",id));
+    }
     private UserDto.Response toResponse(User user) {
         return new UserDto.Response(
                 user.getId(),
