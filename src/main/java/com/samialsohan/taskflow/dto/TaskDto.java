@@ -25,6 +25,19 @@ public final class TaskDto {
             TaskPriority priority,
             LocalDate dueDate
     ){}
+    public record UpdateRequest(
+            @NotBlank(message = "Task title is required")
+            @Size(max = 300, message = "Title must be 300 character or less")
+            String title,
+
+            @Size(max = 2000, message = "Description must be 2000 character or less")
+            String description,
+
+            Long assigneeId,
+            TaskPriority priority,
+            LocalDate dueDate
+    ){}
+
     public record Response(
             Long id,
             String title,

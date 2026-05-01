@@ -47,4 +47,10 @@ public class TaskController {
                                              @Valid @RequestBody TaskDto.StatusUpdate dto){
         return taskService.updateTaskStatus(id,dto);
     }
+    @PutMapping("/{id}")
+    public TaskDto.Response updateTask(@PathVariable Long id,
+                                       @Valid @RequestBody TaskDto.UpdateRequest dto)
+    {
+        return taskService.updateTask(id, dto);
+    }
 }

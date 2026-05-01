@@ -60,6 +60,29 @@ public class TaskService {
         }
         taskRepository.deleteById(id);
     }
+    public TaskDto.Response updateTask(Long id, TaskDto.UpdateRequest dto){
+        Task task = findTaskOrThrow(id);
+
+        task.setTitle(dto.title());
+        task.setDescription(dto.description());
+        task.setDueDate(dto.dueDate());
+
+        if(dto.priority() != null)
+            task.setPriority(dto.priority());
+
+        if(dto.assigneeId() != null)
+        {
+            // Client sent an assignee ID → look up and assign
+            User assignee = userService.findUserOrThrow(dto.assigneeId());
+            task.setAssignee(assignee);
+        }
+        else{
+            // Client sent null → unassign the task
+            task.setAssignee(null);
+        }
+        Task saved = taskRepository.save(task);
+        return toResponse(saved);
+    }
     private Task findTaskOrThrow(Long id){
         return taskRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Task", id ));
 
