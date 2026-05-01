@@ -63,6 +63,12 @@ public class TaskService {
     public TaskDto.Response updateTask(Long id, TaskDto.UpdateRequest dto){
         Task task = findTaskOrThrow(id);
 
+        if (task.getStatus() == TaskStatus.DONE || task.getStatus() == TaskStatus.CANCELLED)
+        {
+            throw new BusinessRuleException(
+                    "Cannot update a task with status " + task.getStatus()
+            );
+        }
         task.setTitle(dto.title());
         task.setDescription(dto.description());
         task.setDueDate(dto.dueDate());
