@@ -40,5 +40,9 @@ public final class TaskDto {
             Long assigneeId,
             String assigneeName
     ){}
+    public record StatusUpdate(
+            @NotNull(message = "Status is required")
+            TaskStatus status
+    ){}
 
 }

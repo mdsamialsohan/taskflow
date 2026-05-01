@@ -42,4 +42,9 @@ public class TaskController {
     {
         taskService.deleteTask(id);
     }
+    @PatchMapping("/{id}/status")
+    public TaskDto.Response updateTaskStatus(@PathVariable Long id,
+                                             @Valid @RequestBody TaskDto.StatusUpdate dto){
+        return taskService.updateTaskStatus(id,dto);
+    }
 }

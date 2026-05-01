@@ -3,9 +3,12 @@ package com.samialsohan.taskflow.service;
 import com.samialsohan.taskflow.dto.TaskDto;
 import com.samialsohan.taskflow.entity.Project;
 import com.samialsohan.taskflow.entity.Task;
+import com.samialsohan.taskflow.entity.TaskStatus;
 import com.samialsohan.taskflow.entity.User;
+import com.samialsohan.taskflow.exception.BusinessRuleException;
 import com.samialsohan.taskflow.exception.ResourceNotFoundException;
 import com.samialsohan.taskflow.repository.TaskRepository;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -80,5 +83,35 @@ public class TaskService {
         );
 
 
+    }
+    public TaskDto.Response updateTaskStatus(Long id, TaskDto.StatusUpdate dto){
+        Task task = findTaskOrThrow(id);
+        validateStatusTransition(task, task.getStatus(), dto.status());
+        task.setStatus(dto.status());
+        Task saved = taskRepository.save(task);
+        return toResponse(saved);
+    }
+    private void validateStatusTransition(Task task, TaskStatus from, TaskStatus to){
+        if(from == to) return;
+        if(from == TaskStatus.DONE)
+            throw new BusinessRuleException("Task already completed, Unable to change!");
+        if(from == TaskStatus.CANCELLED)
+            throw new BusinessRuleException("This task is cancelled, We are unable to change it!");
+        switch(from){
+            case TODO -> {
+                if(to != TaskStatus.IN_PROGRESS){
+                    throw new BusinessRuleException("Task in TODO can only move to IN_PROGRESS, not " +to);
+                }
+            }
+            case IN_PROGRESS -> {
+                if(to == TaskStatus.DONE && task.getAssignee()==null){
+                    throw new BusinessRuleException("Cannot mark task as DONE without an assignee");
+                }
+                if(to!= TaskStatus.DONE && to!=TaskStatus.CANCELLED){
+                    throw new BusinessRuleException("Task in IN_PROGRESS can only move to DONE or CANCELLED, not "+to);
+                }
+            }
+            default -> throw new BusinessRuleException("UnExpected status: "+from);
+        }
     }
 }

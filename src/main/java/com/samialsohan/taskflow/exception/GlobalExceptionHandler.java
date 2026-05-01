@@ -57,4 +57,15 @@ public class GlobalExceptionHandler {
                         "timestamp", Instant.now().toString()
                 ));
     }
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<Map<String, Object>> handleBusinessRule(BusinessRuleException ex){
+        return ResponseEntity
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(Map.of(
+                        "status", 422,
+                        "error", "unprocessable Entity",
+                        "message", ex.getMessage(),
+                        "timestamp", Instant.now().toString()
+                ));
+    }
 }
