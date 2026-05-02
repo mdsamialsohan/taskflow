@@ -3,6 +3,8 @@ package com.samialsohan.taskflow.controller;
 import com.samialsohan.taskflow.dto.UserDto;
 import com.samialsohan.taskflow.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +20,9 @@ public class UserController {
         this.userService = userService;
     }
     @GetMapping
-    public List<UserDto.Response>getAllUsers(){
-        return userService.getAllUser();
+    public Page<UserDto.Response> getAllUsers(Pageable pageable) {
+        return userService.getAllUsers(pageable);
     }
-
     @PostMapping
     public ResponseEntity<UserDto.Response>createUser(@Valid @RequestBody UserDto.CreateRequest dto){
         UserDto.Response response = userService.createUser(dto);

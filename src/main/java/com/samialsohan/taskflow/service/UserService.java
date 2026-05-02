@@ -5,10 +5,9 @@ import com.samialsohan.taskflow.entity.Project;
 import com.samialsohan.taskflow.entity.User;
 import com.samialsohan.taskflow.exception.ResourceNotFoundException;
 import com.samialsohan.taskflow.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Locale;
 
 @Service
 public class UserService {
@@ -17,11 +16,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<UserDto.Response>getAllUser(){
-        return userRepository.findAll()
-                .stream()
-                .map(this::toResponse)
-                .toList();
+    public Page<UserDto.Response> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable)
+                .map(this::toResponse);
     }
     public UserDto.Response createUser(UserDto.CreateRequest dto){
         User user = new User(dto.name(), dto.email());
