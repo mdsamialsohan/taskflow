@@ -8,6 +8,28 @@ Users create projects, add tasks to them, assign tasks to team
 members, and move tasks through statuses with enforced business
 rules.
 
+## Live Demo
+
+🚀 **Live API:** https://taskflow-e4s5.onrender.com
+
+Try it:
+
+```bash
+# Health check
+curl https://taskflow-e4s5.onrender.com/health
+
+# List users
+curl https://taskflow-e4s5.onrender.com/api/users
+
+# Create a user
+curl -X POST https://taskflow-e4s5.onrender.com/api/users \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Alice","email":"alice@test.com"}'
+```
+
+> Note: The free Render tier spins down after 15 minutes of
+> inactivity. The first request may take 30+ seconds to wake up.
+
 ## Tech Stack
 
 - Java 21
@@ -18,6 +40,7 @@ rules.
 - Docker and Docker Compose
 - JUnit 5 and Testcontainers
 - GitHub Actions (CI)
+- Render (CD / hosting)
 
 ## Getting Started
 
@@ -185,6 +208,18 @@ curl -X POST http://localhost:8080/api/users \
 ```
 
 ## Design Decisions
+### Deployment
+
+The project uses a simple CI/CD flow:
+
+1. Push to `main` branch on GitHub
+2. GitHub Actions runs the test suite
+3. If tests pass, Render automatically pulls the latest code,
+   builds the Docker image, and deploys it
+4. The new version is live within a few minutes
+
+This setup means every change goes through automated tests before
+reaching the live API.
 
 ### Why Flyway instead of Hibernate auto-DDL?
 
