@@ -1,10 +1,7 @@
 package com.samialsohan.taskflow.service;
 
 import com.samialsohan.taskflow.dto.TaskDto;
-import com.samialsohan.taskflow.entity.Project;
-import com.samialsohan.taskflow.entity.Task;
-import com.samialsohan.taskflow.entity.TaskStatus;
-import com.samialsohan.taskflow.entity.User;
+import com.samialsohan.taskflow.entity.*;
 import com.samialsohan.taskflow.exception.BusinessRuleException;
 import com.samialsohan.taskflow.exception.ResourceNotFoundException;
 import com.samialsohan.taskflow.repository.TaskRepository;
@@ -26,10 +23,10 @@ public class TaskService {
         this.taskRepository = taskRepository;
         this.userService = userService;
     }
-    public List<TaskDto.Response> getTaskByProject(Long projectId)
+    public List<TaskDto.Response> searchTasks(Long projectId, TaskStatus status,
+                                              TaskPriority priority, Long assigneeId, String keyword)
     {
-        projectService.findProjectOrThrow(projectId);
-        return taskRepository.findByProjectId(projectId)
+        return taskRepository.searchTasks(projectId, status, priority, assigneeId, keyword)
                 .stream()
                 .map(this::toResponse)
                 .toList();

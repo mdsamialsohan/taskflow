@@ -11,7 +11,7 @@ create table tasks(
     title varchar(300) not null,
     description varchar(2000),
     status varchar(20) not null default 'TODO',
-    priority varchar(20) not null default 'Medium',
+    priority varchar(20) not null default 'MEDIUM',
     due_date date,
     version integer not null default 0,
     created_at timestamptz not null default now(),

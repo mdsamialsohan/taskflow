@@ -2,7 +2,7 @@ package com.samialsohan.taskflow.entity;
 
 public enum TaskPriority {
     LOW,
-    Medium,
+    MEDIUM,
     HIGH,
     URGENT
 }

@@ -1,8 +1,11 @@
 package com.samialsohan.taskflow.controller;
 
 import com.samialsohan.taskflow.dto.TaskDto;
+import com.samialsohan.taskflow.entity.TaskPriority;
+import com.samialsohan.taskflow.entity.TaskStatus;
 import com.samialsohan.taskflow.service.TaskService;
 import jakarta.validation.Valid;
+import org.aspectj.lang.annotation.DeclareWarning;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +22,15 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<TaskDto.Response> getTaskByProject(@RequestParam Long projectId)
+    public List<TaskDto.Response> searchTasks(
+            @RequestParam(required = false) Long projectId,
+            @RequestParam(required = false)TaskStatus status,
+            @RequestParam(required = false)TaskPriority priority,
+            @RequestParam(required = false) Long assigneeId,
+            @RequestParam(required = false) String keyword
+            )
     {
-        return taskService.getTaskByProject(projectId);
+        return taskService.searchTasks(projectId, status, priority, assigneeId, keyword);
     }
 
     @GetMapping("/{id}")

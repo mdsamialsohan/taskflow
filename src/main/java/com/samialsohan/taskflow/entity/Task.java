@@ -24,7 +24,7 @@ public class Task {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private TaskPriority priority = TaskPriority.Medium;
+    private TaskPriority priority = TaskPriority.MEDIUM;
 
     @Column(name="due_date")
     private LocalDate dueDate;
