@@ -1,4 +1,5 @@
 # TaskFlow — Task Management REST API
+![CI](https://github.com/mdsamialsohan/taskflow/actions/workflows/ci.yml/badge.svg)
 
 A backend REST API for managing tasks and projects, built with
 Java 21, Spring Boot 4, PostgreSQL, and Docker.
@@ -16,6 +17,7 @@ rules.
 - Flyway (database migrations)
 - Docker and Docker Compose
 - JUnit 5 and Testcontainers
+- GitHub Actions (CI)
 
 ## Getting Started
 
@@ -259,6 +261,61 @@ Rules enforced:
 - Soft delete instead of hard delete
 - Audit fields (createdBy, updatedBy)
 
+## Notes from Building This
+
+### Spring Boot 4 + Testcontainers 2.x in CI
+
+I hit a tricky issue when setting up GitHub Actions. Testcontainers
+worked locally with the standard static `@Container` pattern, but
+in CI the second test class would fail with "connection closed"
+errors. The Postgres container started successfully, but Spring
+created a new connection pool (HikariPool-2) for each test class,
+and the connections to the original container were being dropped.
+
+The root cause was that Spring Boot 4 + Testcontainers 2.x do not
+reliably reuse the static container reference across multiple
+test contexts.
+
+The fix was to switch from the static `@Container` pattern to
+Spring Boot 4's recommended approach — declaring the container as
+a Spring-managed bean using `@TestConfiguration` and
+`@ServiceConnection`:
+
+```java
+@Import(BaseIntegrationTest.TestcontainersConfiguration.class)
+public abstract class BaseIntegrationTest {
+
+    @TestConfiguration(proxyBeanMethods = false)
+    static class TestcontainersConfiguration {
+
+        @Bean
+        @ServiceConnection
+        PostgreSQLContainer postgresContainer() {
+            return new PostgreSQLContainer("postgres:16-alpine");
+        }
+    }
+}
+```
+
+With the container managed as a bean, Spring handles its
+lifecycle properly across test classes. CI now passes reliably
+on every push.
+
+### Spring Boot 4 dependency changes
+
+Spring Boot 4 split several modules that used to be bundled.
+A few that caught me out:
+
+- `flyway-core` no longer auto-configures Flyway — needed to
+  switch to `spring-boot-starter-flyway`
+- `MockMvc` auto-configuration moved to a separate module —
+  `spring-boot-starter-webmvc-test`
+- `PostgreSQLContainer` moved package — now in
+  `org.testcontainers.postgresql` instead of
+  `org.testcontainers.containers`
+
+These are documented in the Spring Boot 4 migration guide but
+caused real debugging time before I tracked them down.
 ---
 
 Built by [MD SAMIAL HASAN SOHAN](https://github.com/mdsamialsohan) — feedback welcome.
