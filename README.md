@@ -11,6 +11,7 @@ rules.
 ## Live Demo
 
 🚀 **Live API:** https://taskflow-e4s5.onrender.com
+📘 **Interactive API docs (Swagger UI):** https://taskflow-e4s5.onrender.com/swagger-ui.html
 
 Try it:
 
@@ -37,6 +38,7 @@ curl -X POST https://taskflow-e4s5.onrender.com/api/users \
 - PostgreSQL 16
 - Hibernate / Spring Data JPA
 - Flyway (database migrations)
+- springdoc-openapi (Swagger UI)
 - Docker and Docker Compose
 - JUnit 5 and Testcontainers
 - GitHub Actions (CI)
@@ -59,7 +61,8 @@ cd taskflow
 docker compose up --build
 ```
 
-The API will be available at `http://localhost:8080`.
+The API will be available at `http://localhost:8080`, with
+interactive Swagger UI at `http://localhost:8080/swagger-ui.html`.
 
 ### Run locally (for development)
 
@@ -291,7 +294,6 @@ Rules enforced:
 - Authentication and authorization (Spring Security + JWT)
 - Async event publishing on task changes (Kafka)
 - Caching frequently-read data (Redis)
-- API documentation with OpenAPI / Swagger
 - Rate limiting on public endpoints
 - Soft delete instead of hard delete
 - Audit fields (createdBy, updatedBy)
